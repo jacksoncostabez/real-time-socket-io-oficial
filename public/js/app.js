@@ -2148,6 +2148,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   mounted: function mounted() {
@@ -31075,7 +31083,20 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_vm._v("Este é um component.")])
+  return _c(
+    "div",
+    [
+      _c("h1", [_vm._v("Posts")]),
+      _vm._v(" "),
+      _vm._l(_vm.posts.data, function (post, index) {
+        return _c("div", { key: index }, [
+          _vm._v("\n        " + _vm._s(post.name) + "\n        \n        "),
+          _c("hr"),
+        ])
+      }),
+    ],
+    2
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
