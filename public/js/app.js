@@ -2142,13 +2142,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
 //
-//
-//
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({});
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  mounted: function mounted() {
+    this.loadPosts();
+  },
+  data: function data() {
+    return {
+      posts: {
+        data: []
+      }
+    };
+  },
+  methods: {
+    loadPosts: function loadPosts() {
+      var _this = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get('/api/posts').then(function (response) {
+        return _this.posts = response.data;
+      })["catch"](function (response) {
+        return _this.$vToastify.error('Falha ao carregar os posts.', 'Erro');
+      });
+    }
+  }
+});
 
 /***/ }),
 
@@ -31052,7 +31075,7 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_vm._v("\n    Este é um component.\n")])
+  return _c("div", [_vm._v("Este é um component.")])
 }
 var staticRenderFns = []
 render._withStripped = true
