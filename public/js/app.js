@@ -2144,7 +2144,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-//
+/* harmony import */ var _bus__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../bus */ "./resources/js/bus.js");
 //
 //
 //
@@ -2157,9 +2157,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   mounted: function mounted() {
-    this.loadPosts();
+    var _this = this;
+
+    this.loadPosts(); //escuta o post enviado pelo emit.
+
+    _bus__WEBPACK_IMPORTED_MODULE_1__["default"].$on('post.created', function (post) {
+      _this.posts.data.unshift(post);
+    });
   },
   data: function data() {
     return {
@@ -2170,12 +2177,12 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     loadPosts: function loadPosts() {
-      var _this = this;
+      var _this2 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_0___default().get('/api/posts').then(function (response) {
-        return _this.posts = response.data;
+        return _this2.posts = response.data;
       })["catch"](function (response) {
-        return _this.$vToastify.error('Falha ao carregar os posts.', 'Erro');
+        return _this2.$vToastify.error('Falha ao carregar os posts.', 'Erro');
       });
     }
   }
@@ -2191,12 +2198,16 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+/* harmony import */ var _bus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./bus */ "./resources/js/bus.js");
+
 
 window.Echo.channel('laravel_database_post-created').listen('PostCreated', function (e) {
-  console.log(e);
-  console.log(e.post);
-  vue__WEBPACK_IMPORTED_MODULE_0__["default"].$vToastify.success("T\xEDtulo do post: ".concat(e.post.name), 'Novo Post');
+  // console.log(e)
+  // console.log(e.post)
+  //dispara este evento para toda a aplicação, ou seja, quando um novo post for criado automaticamente ele aparece na lista de posts.
+  _bus__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('post.created', e.post);
+  vue__WEBPACK_IMPORTED_MODULE_1__["default"].$vToastify.success("T\xEDtulo do post: ".concat(e.post.name), 'Novo Post');
 });
 
 /***/ }),
@@ -2264,6 +2275,23 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
 });
 
 __webpack_require__(/*! ./Echo */ "./resources/js/Echo.js");
+
+/***/ }),
+
+/***/ "./resources/js/bus.js":
+/*!*****************************!*\
+  !*** ./resources/js/bus.js ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (new vue__WEBPACK_IMPORTED_MODULE_0__["default"]());
 
 /***/ }),
 
@@ -31086,13 +31114,25 @@ var render = function () {
   return _c(
     "div",
     [
-      _c("h1", [_vm._v("Posts")]),
+      _c(
+        "h1",
+        { staticClass: "text-center text-3x1 uppercase font-black py-8" },
+        [_vm._v("Posts")]
+      ),
       _vm._v(" "),
       _vm._l(_vm.posts.data, function (post, index) {
-        return _c("div", { key: index }, [
-          _vm._v("\n        " + _vm._s(post.name) + "\n        \n        "),
-          _c("hr"),
-        ])
+        return _c(
+          "div",
+          {
+            key: index,
+            staticClass: "bg-white w-full p-4 my-4 rounded-xl shadow border",
+          },
+          [
+            _c("p", { staticClass: "break-all" }, [
+              _vm._v(" " + _vm._s(post.name) + " "),
+            ]),
+          ]
+        )
       }),
     ],
     2
